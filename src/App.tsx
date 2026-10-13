@@ -206,12 +206,6 @@ function FleetApp({ info, fleets, seg }: { info: FleetInfo; fleets: FleetsRespon
             <Pill tone={snap.live ? "info" : "warn"} title="the one fleet-wide event connection">
               {snap.live ? "● live" : "○ reconnecting"}
             </Pill>
-            {status && (
-              <Pill tone={status.credentialsLoaded ? "muted" : "warn"} title="credential values on the Controller">
-                creds {status.credentialsLoaded ? "loaded" : "missing"}
-              </Pill>
-            )}
-            {status && <Pill tone="muted">egress {status.egressEnforcement || "?"}</Pill>}
             {warnings.length > 0 && (
               <button className="pill warn" onClick={() => setWarnOpen(true)}>
                 ⚠ {warnings.length} warning{warnings.length > 1 ? "s" : ""}

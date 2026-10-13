@@ -202,7 +202,7 @@ function Chat({ name, here, fresh, setFresh, selected }: { name: string; here: s
   // live: fold this agent computer's events as they arrive
   useEffect(() => {
     return store.onEvent((ev: ConsoleEvent) => {
-      if ((ev.agentComputer || ev.computer) !== name || !ev.turn) return;
+      if (ev.agentComputer !== name || !ev.turn) return;
       if (!["turn.started", "text.delta", "tool.started", "tool.finished", "egress.denied", "turn.finished"].includes(ev.type)) return;
       setTurns((prev) => {
         const next = new Map(prev);
@@ -226,14 +226,14 @@ function Chat({ name, here, fresh, setFresh, selected }: { name: string; here: s
     void (async () => {
       const got = new Map<string, string>();
       try {
-        const all = await store.fleet.client.inbox(name, { state: "all", bodies: true });
+        const all = await store.fleet.client.request<{ messages: Message[] }>("GET", `/v1/agent-computers/${encodeURIComponent(name)}/inbox?state=all&bodies=true`);
         for (const m of all.messages) if (m.body !== undefined) got.set(m.id, m.body);
       } catch {
         // fall through to one by one
       }
       for (const id of missing.filter((x) => !got.has(x)).slice(0, 10)) {
         try {
-          const m = await store.fleet.client.message(name, id);
+          const m = await store.fleet.client.request<Message>("GET", `/v1/agent-computers/${encodeURIComponent(name)}/inbox/${encodeURIComponent(id)}`);
           got.set(id, m.body ?? "");
         } catch {
           got.set(id, "");
@@ -248,7 +248,7 @@ function Chat({ name, here, fresh, setFresh, selected }: { name: string; here: s
 
   const loadQueued = async () => {
     try {
-      const r = await store.fleet.client.inbox(name, { bodies: true });
+      const r = await store.fleet.client.request<{ messages: Message[] }>("GET", `/v1/agent-computers/${encodeURIComponent(name)}/inbox?bodies=true`);
       setQueued(r.messages);
     } catch {
       // keep what we have
@@ -494,7 +494,7 @@ function AcTimeline({ name }: { name: string }) {
     })();
     return () => ac.abort();
   }, [history?.[0]?.id, name, store]); // eslint-disable-line react-hooks/exhaustive-deps
-  const liveEvents = snap.events.filter((e) => (e.agentComputer || e.computer) === name);
+  const liveEvents = snap.events.filter((e) => e.agentComputer === name);
   const seen = new Set(liveEvents.map((e) => `${e.seq}/${e.type}`));
   const merged = [...past.filter((e) => !seen.has(`${e.seq}/${e.type}`) || e.seq === 0), ...liveEvents].reverse();
   return (

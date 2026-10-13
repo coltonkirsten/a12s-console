@@ -80,7 +80,7 @@ function InboxRow({ c, open, toggle }: { c: ComputerStatus; open: boolean; toggl
       return;
     }
     store.fleet.client
-      .inbox(c.name, {})
+      .request<{ messages: Message[] }>("GET", `/v1/agent-computers/${encodeURIComponent(c.name)}/inbox`)
       .then((r) => setOldest(r.messages[0]?.createdAt))
       .catch(() => {});
   }, [pending, c.name, store]);
@@ -151,7 +151,7 @@ export function PendingList({ name, rev }: { name: string; rev: number }) {
   useEffect(() => {
     let live = true;
     store.fleet.client
-      .inbox(name, { bodies: true })
+      .request<{ messages: Message[] }>("GET", `/v1/agent-computers/${encodeURIComponent(name)}/inbox?bodies=true`)
       .then((r) => live && setMsgs(r.messages))
       .catch(() => live && setMsgs([]));
     return () => {
@@ -163,7 +163,7 @@ export function PendingList({ name, rev }: { name: string; rev: number }) {
   if (!msgs.length) return <div className="faint" style={{ padding: "10px 14px" }}>Nothing pending.</div>;
   const withdraw = async (m: Message) => {
     try {
-      await store.fleet.client.withdraw(name, m.id);
+      await store.fleet.client.request("DELETE", `/v1/agent-computers/${encodeURIComponent(name)}/inbox/${encodeURIComponent(m.id)}`);
       setMsgs((x) => x?.filter((y) => y.id !== m.id) ?? null);
       toast(`Withdrew #${m.seq}`);
       store.refreshSoon(0);

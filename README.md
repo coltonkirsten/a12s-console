@@ -18,7 +18,7 @@ It finds every running Fleet on this machine (`~/.a12s/<fleet>/controller.json`,
 - **Turn details**: status, timing split into queue / think / tools / answer, normalized tokens (in, out, cache read, cache write), errors, egress denials, every event, raw JSON and "copy as curl".
 - **Timeline**: the whole Fleet on one connection, filterable (turns, tools, egress, fleet changes, problems), pausable.
 - **Inboxes**: every queue in one table. Hold, resume (in a new session), clear, and withdraw single Messages.
-- **Fleet editor**: add, edit and remove agent computers and Services. Instructions inline, files, harness, image, credentials by name, egress, grants, uses, power, resources, autonomy and the seccomp profile, with values from Defaults shown in grey. Form or YAML. Every edit is checked by the Controller as you type (`?dryRun=true`) and shows the change as `before → after` before you save.
+- **Fleet editor**: add, edit and remove agent computers and Services. Instructions inline, files, harness, image, credentials by name, egress, grants, uses, power, resources and the seccomp profile, with values from Defaults shown in grey. Form or YAML. Every edit is checked by the Controller as you type (`?dryRun=true`) and shows the change as `before → after` before you save.
 - **Credentials**: set or replace by name. Values are write-only; nobody can read one back.
 - **Tokens**: create a prefix lane (`biz-` gets owner powers on `biz-*` only) or a narrow token, see when each was last used, revoke.
 

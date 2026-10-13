@@ -67,7 +67,6 @@ export function Editor({ sel: selPath }: { sel: string[] }) {
 
   const acs = Object.keys(fleet.spec.agent_computers ?? {}).sort();
   const svcs = Object.keys(fleet.spec.services ?? {}).sort();
-  const drives = Object.entries(fleet.spec.drives ?? {});
   const on = (k: Kind, n: string) => sel.kind === k && sel.name === n && !sel.isNew;
   const phase = (n: string) => snap.status?.agentComputers?.find((c) => c.name === n)?.phase;
 
@@ -99,16 +98,6 @@ export function Editor({ sel: selPath }: { sel: string[] }) {
         <Link to={`${base}/editor/new-service`} className="add">
           + Add Service
         </Link>
-        {drives.length > 0 && (
-          <>
-            <div className="grp">DRIVES</div>
-            {drives.map(([n, d]) => (
-              <a key={n} title={`${d.access} · ${d.size ?? ""} (change drives in fleet.yaml)`}>
-                ▤ <span className="ellipsis">{n}</span> <span className="faint">{d.access}</span>
-              </a>
-            ))}
-          </>
-        )}
       </nav>
       <ItemEditor
         key={`${sel.kind}/${sel.name}/${sel.isNew}/${fleet.version}`}
@@ -256,7 +245,7 @@ function ItemEditor(props: {
       title: `Remove ${what} ${name}?`,
       body: (
         <div className="col" style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span className="muted">It stops and leaves the Fleet. Its drives are kept; its inbox is orphaned. `a12s up` from fleet.yaml brings back what the file lists.</span>
+          <span className="muted">It stops and leaves the Fleet. Its home drive is kept; its inbox is orphaned. `a12s up` from fleet.yaml brings back what the file lists.</span>
           {changes.length > 0 && <Changes changes={changes} />}
         </div>
       ),
@@ -571,16 +560,7 @@ function AcForm({ draft, setDraft, inherited, creds, acNames, svcNames, isDefaul
           <input className="input mono" style={{ width: 70 }} placeholder={ph("resources.cpu", "2")} value={String(f("resources.cpu") ?? "")} onChange={(e) => put("resources.cpu", e.target.value || undefined)} />
           <span className="faint">memory</span>
           <input className="input mono" style={{ width: 90 }} placeholder={ph("resources.memory", "4Gi")} value={String(f("resources.memory") ?? "")} onChange={(e) => put("resources.memory", e.target.value || undefined)} />
-          <span className="faint">home</span>
-          <input className="input mono" style={{ width: 90 }} placeholder={ph("home.size", "10Gi")} value={String(f("home.size") ?? "")} onChange={(e) => put("home.size", e.target.value || undefined)} />
         </div>
-      </Field>
-      <Field label="Autonomy">
-        <select className="select" value={str("autonomy")} onChange={(e) => put("autonomy", e.target.value || undefined)}>
-          <option value="">{inh("autonomy") ? `${inh("autonomy")} (default)` : "full (default)"}</option>
-          <option value="full">full: runs any command on its own computer</option>
-          <option value="restricted">restricted: every permission request is denied</option>
-        </select>
       </Field>
       <Field label="Seccomp" help="A Docker-format profile replacing Docker's default, for software that needs blocked syscalls (Chromium's sandbox).">
         <div className="row">
@@ -617,16 +597,8 @@ function AcForm({ draft, setDraft, inherited, creds, acNames, svcNames, isDefaul
           />
         </div>
       </Field>
-      <Field label="Inbox" help="Limits for queued Messages; intro is prepended to each delivery.">
-        <div className="row wrap">
-          <span className="faint">max messages</span>
-          <input className="input mono" style={{ width: 70 }} placeholder={ph("inbox.maxMessages", "200")} value={String(f("inbox.maxMessages") ?? "")} onChange={(e) => put("inbox.maxMessages", e.target.value ? Number(e.target.value) : undefined)} />
-          <span className="faint">max bytes</span>
-          <input className="input mono" style={{ width: 80 }} placeholder={ph("inbox.maxBytes", "320Ki")} value={str("inbox.maxBytes")} onChange={(e) => put("inbox.maxBytes", e.target.value || undefined)} />
-        </div>
-      </Field>
       <div className="faint" style={{ fontSize: 11.5, marginTop: 10 }}>
-        {isDefaults ? "Maps merge and lists replace when an agent computer sets its own." : "Grey = filled in from Defaults. Type to override; clear to inherit again."}
+        {isDefaults ? "Maps merge and lists replace when an agent computer sets its own; credentials add to these." : "Grey = filled in from Defaults. Type to override; clear to inherit again."}
       </div>
     </div>
   );
