@@ -84,7 +84,9 @@ function ComputerCard({ c, now }: { c: ComputerStatus; now: number }) {
   const held = c.inbox?.held;
   const tone = phaseTone(c.phase);
   const href = `${base}/ac/${encodeURIComponent(c.name)}`;
-  const missingCred = (c.warnings ?? []).find((w) => /credential/i.test(w));
+  const missingCred = c.waiting
+    ? `waiting for ${c.waiting.credentials.join(", ")}: ${c.waiting.fix}`
+    : (c.warnings ?? []).find((w) => /credential/i.test(w));
 
   const wake = async (e: React.MouseEvent) => {
     e.preventDefault();

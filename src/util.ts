@@ -181,7 +181,7 @@ export function wakeText(p: { autoWake?: string; wakeOnMessage?: string[]; reaso
     case "on":
       return `wakes on a message via ${(p.wakeOnMessage ?? []).join(", ")}`;
     case "suppressed":
-      return "slept by hand: stays asleep until woken";
+      return "held asleep: stays asleep until woken";
     case "paused":
       return `auto-wake paused${p.reason ? `: ${p.reason}` : ""}`;
     default:

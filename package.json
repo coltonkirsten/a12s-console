@@ -32,7 +32,7 @@
     "test": "node --test test/*.test.js"
   },
   "dependencies": {
-    "@coltonkirsten/a12s": "^0.4.0"
+    "@coltonkirsten/a12s": "^0.5.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.0",
@@ -44,5 +44,13 @@
     "vite": "^8.3.4",
     "yaml": "^2.9.1"
   },
-  "keywords": ["a12s", "agents", "console", "devtools", "claude-code", "codex", "observability"]
+  "keywords": [
+    "a12s",
+    "agents",
+    "console",
+    "devtools",
+    "claude-code",
+    "codex",
+    "observability"
+  ]
 }
