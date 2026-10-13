@@ -2,7 +2,7 @@
 
 Chrome DevTools for [a12s](https://github.com/coltonkirsten/a12s): watch your agent computers work, chat with them, and edit the Fleet, from one local web page.
 
-![Agent computer chat with tool calls inline and the Turn panel](docs/chat.png)
+![Agent computer chat with tool calls inline and the Turn panel](docs/screens/turn-panel.png)
 
 ```sh
 a12s ui                                    # a12s 0.4.1+: opens the console for the Fleet you're in
@@ -23,6 +23,12 @@ It finds every running Fleet on this machine (`~/.a12s/<fleet>/controller.json`,
 - **Tokens**: create a prefix lane (`biz-` gets owner powers on `biz-*` only) or a narrow token, see when each was last used, revoke.
 
 Keyboard: `⌘K` go to anything, `g o / t / i / e / c / k` pages, `1`–`5` tabs, `/` focus, `⌘S` save, `?` all shortcuts. Dark and light (follows the system; `Shift T` cycles).
+
+| | |
+|---|---|
+| ![Overview](docs/screens/overview.png) Overview | ![Chat, live](docs/screens/chat-live.png) Chat while a Turn streams |
+| ![Fleet editor](docs/screens/editor-diff.png) Fleet editor, dry run before → after | ![Inboxes](docs/screens/inboxes.png) Inboxes |
+| ![Timeline](docs/screens/timeline.png) Timeline | ![Light](docs/screens/light-overview.png) Light theme |
 
 ## Security
 

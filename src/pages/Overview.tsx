@@ -2,7 +2,7 @@ import type { ComputerStatus, ServiceStatus } from "@coltonkirsten/a12s";
 import { useSnapshot, errText } from "../store";
 import { Empty, Link, PhaseBadge, Pill, navigate, useApp, useNow } from "../ui";
 import { EventLog } from "./Timeline";
-import { ago, cls, dur, phaseTone, tok, tokensToday } from "../util";
+import { ago, cls, dur, phaseTone, tok, tokensToday, wakeText } from "../util";
 
 export function Overview() {
   const { store, base } = useApp();
@@ -106,7 +106,7 @@ function ComputerCard({ c, now }: { c: ComputerStatus; now: number }) {
       </span>
     );
   } else if (c.phase === "Asleep") {
-    line = <span className="muted">{c.power?.autoWake ? `wakes on ${c.power.autoWake}` : "asleep"}</span>;
+    line = <span className="muted">{wakeText(c.power)}</span>;
   } else if (last) {
     line = (
       <span className="muted">
@@ -182,7 +182,7 @@ function ServiceRow({ v }: { v: ServiceStatus }) {
       <td style={{ fontWeight: 600 }}>{v.name}</td>
       <td>
         <PhaseBadge phase={v.phase === "Ready" ? "Running" : v.phase} />
-        {v.health && v.health !== "healthy" && (
+        {v.health && v.health !== "ok" && v.health !== "healthy" && (
           <Pill tone="warn">{v.health}</Pill>
         )}
       </td>

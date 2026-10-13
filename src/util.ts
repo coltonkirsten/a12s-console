@@ -175,6 +175,20 @@ export function phaseTone(phase: string | undefined): Tone {
   }
 }
 
+/** What wakes an agent computer that is asleep, from its power status. */
+export function wakeText(p: { autoWake?: string; wakeOnMessage?: string[]; reason?: string } | undefined): string {
+  switch (p?.autoWake) {
+    case "on":
+      return `wakes on a message via ${(p.wakeOnMessage ?? []).join(", ")}`;
+    case "suppressed":
+      return "slept by hand: stays asleep until woken";
+    case "paused":
+      return `auto-wake paused${p.reason ? `: ${p.reason}` : ""}`;
+    default:
+      return "stays asleep until woken";
+  }
+}
+
 export function copy(text: string): void {
   void navigator.clipboard?.writeText(text);
 }

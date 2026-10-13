@@ -62,7 +62,7 @@ export function Inboxes() {
 function stateOf(c: ComputerStatus): { label: string; tone: "ok" | "warn" | "busy" | "muted" | "err" } {
   const i = c.inbox;
   if (i?.held) return { label: `held${i.holdReason ? `: ${i.holdReason}` : ""}`, tone: "warn" };
-  if (c.phase === "Asleep") return { label: (i?.pending ?? 0) > 0 && c.power?.autoWake ? "asleep · will wake" : "asleep", tone: "muted" };
+  if (c.phase === "Asleep") return { label: (i?.pending ?? 0) > 0 && c.power?.autoWake === "on" ? "asleep · will wake" : "asleep", tone: "muted" };
   if (c.phase === "Busy" || (i?.claimed ?? 0) > 0) return { label: "delivering", tone: "busy" };
   if (c.phase === "Error") return { label: "agent computer in error", tone: "err" };
   return { label: (i?.pending ?? 0) > 0 ? "waiting for idle" : "idle", tone: (i?.pending ?? 0) > 0 ? "busy" : "ok" };

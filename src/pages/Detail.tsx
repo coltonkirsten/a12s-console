@@ -6,7 +6,7 @@ import { Empty, Json, Link, Output, PhaseBadge, Pill, Spinner, navigate, useApp,
 import { EventLog } from "./Timeline";
 import { PendingList } from "./Inboxes";
 import { emptyTurn, foldEvent, fromSummary, replayTurn, timing, type ChatItem, type ChatTurn } from "../turns";
-import { ago, clock, cls, copy, dateTime, dur, num, tok, toolArg, totalTokens } from "../util";
+import { ago, clock, cls, copy, dateTime, dur, num, tok, toolArg, totalTokens, wakeText } from "../util";
 
 const tabs = ["chat", "timeline", "inbox", "turns", "config"] as const;
 
@@ -270,7 +270,7 @@ function Chat({ name, here, fresh, setFresh, selected }: { name: string; here: s
       stick.current = true;
       setBodies((b) => new Map(b).set(m.id, body));
       void loadQueued();
-      if (c?.phase === "Asleep") toast(`${name} is asleep: the Message waits${c.power?.autoWake ? ` (${c.power.autoWake})` : ""}`);
+      if (c?.phase === "Asleep") toast(`${name} is asleep: the Message waits (${wakeText(c.power)})`);
     } catch (err) {
       toast(errText(err), "err");
     } finally {
@@ -350,7 +350,7 @@ function Chat({ name, here, fresh, setFresh, selected }: { name: string; here: s
               <input type="checkbox" checked={fresh} onChange={(e) => setFresh(e.target.checked)} /> new session
             </label>
             {c?.phase === "Busy" && <span className="busy-t">busy: your message is delivered when this Turn ends</span>}
-            {c?.phase === "Asleep" && <span className="warn-t">asleep: {c.power?.autoWake ? `wakes on ${c.power.autoWake}` : "wake it to deliver"}</span>}
+            {c?.phase === "Asleep" && <span className="warn-t">asleep: {c.power?.autoWake === "on" ? wakeText(c.power) : "wake it to deliver"}</span>}
             <span className="grow" />
             <span>
               <kbd>Enter</kbd> send · <kbd>Shift</kbd>+<kbd>Enter</kbd> new line
@@ -723,7 +723,9 @@ function TurnPanel({ name, id, onClose }: { name: string; id: string; onClose: (
           <dt>duration</dt>
           <dd>{startedAt && finishedAt ? dur(Date.parse(finishedAt) - Date.parse(startedAt)) : live ? "running" : "–"}</dd>
           <dt>tokens in</dt>
-          <dd>{num(tokens?.input)}</dd>
+          <dd>
+            {num(tokens?.input)} <span className="faint">uncached</span>
+          </dd>
           <dt>tokens out</dt>
           <dd>{num(tokens?.output)}</dd>
           <dt>cache read</dt>
