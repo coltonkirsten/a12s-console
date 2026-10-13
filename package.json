@@ -1,0 +1,48 @@
+{
+  "name": "@coltonkirsten/a12s-console",
+  "version": "0.1.0",
+  "description": "Chrome DevTools for a12s: watch, chat with and edit your agent computers from a local web console",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "a12s-console": "bin/a12s-console.js"
+  },
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coltonkirsten/a12s-console.git"
+  },
+  "homepage": "https://github.com/coltonkirsten/a12s-console",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "start": "node bin/a12s-console.js",
+    "lint": "tsc --noEmit",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@coltonkirsten/a12s": "^0.4.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.4",
+    "yaml": "^2.9.1"
+  },
+  "keywords": ["a12s", "agents", "console", "devtools", "claude-code", "codex", "observability"]
+}

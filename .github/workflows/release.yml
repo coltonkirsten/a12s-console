@@ -1,0 +1,24 @@
+# On a v* tag: publish to npm with trusted publishing (OIDC, no stored token), the same way @coltonkirsten/a12s is
+# published. Needs a trusted publisher for @coltonkirsten/a12s-console on npmjs.com (repo coltonkirsten/a12s-console,
+# workflow release.yml); without one it warns and skips, and `npx github:coltonkirsten/a12s-console` still works.
+name: release
+on:
+  push: { tags: ["v*"] }
+permissions: { contents: read }
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+    permissions: { contents: read, id-token: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, registry-url: https://registry.npmjs.org }
+      - run: npm install -g npm@11
+      - run: npm ci && npm run build && npm test
+      - run: npm version --no-git-tag-version --allow-same-version "${GITHUB_REF_NAME#v}"
+      - name: publish
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          if [ "$(npm view "@coltonkirsten/a12s-console@$v" version 2> /dev/null)" = "$v" ]; then echo "already on npm"; exit 0; fi
+          npm publish --access public && exit 0
+          echo "::warning::npm publish skipped: add a trusted publisher for @coltonkirsten/a12s-console on npmjs.com"
