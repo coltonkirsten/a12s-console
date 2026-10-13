@@ -24,7 +24,6 @@ export interface Snapshot {
   /** Controller reachable, last time we asked. */
   healthy: boolean | null;
   version: number | null;
-  driftCount: number;
   /** Newest last. */
   events: ConsoleEvent[];
   live: boolean;
@@ -54,7 +53,6 @@ export class FleetStore {
       statusError: null,
       healthy: null,
       version: null,
-      driftCount: 0,
       events: [],
       live: false,
       activeTurns: {},
@@ -125,7 +123,7 @@ export class FleetStore {
   async loadVersion(): Promise<void> {
     try {
       const f = await this.fleet.get();
-      this.set({ version: f.version, driftCount: f.drift.length });
+      this.set({ version: f.version });
     } catch {
       // a prefix token can't read /v1/fleet; the console runs as owner, so this is only a down Controller
     }

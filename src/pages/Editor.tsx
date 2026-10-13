@@ -374,11 +374,6 @@ function ItemEditor(props: {
             ? "Saving writes the whole Fleet with If-Match: if someone wrote in between you get a conflict, never a silent overwrite."
             : "Saves only this one. If someone else edits it while you're here, a banner shows it before you save. Last save wins. A busy agent computer picks changes up at its next idle moment."}
         </div>
-        {!dirty && preview.changes.length === 0 && store.snapshot.driftCount > 0 && (
-          <div className="faint" style={{ fontSize: 11.5 }}>
-            The live Fleet has {store.snapshot.driftCount} change{store.snapshot.driftCount > 1 ? "s" : ""} since the last <code>a12s up</code>. <code>a12s export</code> writes them back to fleet.yaml.
-          </div>
-        )}
       </aside>
     </>
   );
