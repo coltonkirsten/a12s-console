@@ -92,7 +92,7 @@ export function toolArg(input: unknown): string {
 export function nameOf(ev: { agentComputer?: string; computer?: string; type: string; data?: unknown }): string {
   if (ev.type === "service.phase") return (ev.data as { service?: string })?.service ?? "";
   if (ev.type === "fleet.changed") return "fleet";
-  return ev.agentComputer || ev.computer || "fleet";
+  return ev.agentComputer || "fleet";
 }
 
 /** One line about an event, for timelines. */

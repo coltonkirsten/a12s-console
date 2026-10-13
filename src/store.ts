@@ -158,10 +158,10 @@ export class FleetStore {
       }
     }
     if (!got.length) return;
-    const have = new Set(this.snap.events.map((e) => `${e.agentComputer || e.computer}/${e.seq}`));
+    const have = new Set(this.snap.events.map((e) => `${e.agentComputer}/${e.seq}`));
     const past: ConsoleEvent[] = [];
     for (const raw of got.sort((a, b) => Date.parse(a.ts) - Date.parse(b.ts))) {
-      if (have.has(`${raw.agentComputer || raw.computer}/${raw.seq}`)) continue;
+      if (have.has(`${raw.agentComputer}/${raw.seq}`)) continue;
       const ev = { ...(raw as object), _id: nextId++, _at: Date.parse(raw.ts) } as ConsoleEvent;
       const prev = past[past.length - 1];
       if (ev.type === "text.delta" && prev?.type === "text.delta" && prev.turn === ev.turn) {
@@ -189,11 +189,11 @@ export class FleetStore {
 
   private add(raw: A12sEvent): void {
     const ev = { ...(raw as object), _id: nextId++, _at: Date.now() } as ConsoleEvent;
-    const name = ev.agentComputer || ev.computer || "";
+    const name = ev.agentComputer || "";
     const events = this.snap.events.length >= maxEvents ? this.snap.events.slice(-maxEvents + 500) : this.snap.events.slice();
     // text.delta: fold a run of them into the previous one, so a long answer is one row
     const prev = events[events.length - 1];
-    if (ev.type === "text.delta" && prev?.type === "text.delta" && (prev.agentComputer || prev.computer) === name && prev.turn === ev.turn) {
+    if (ev.type === "text.delta" && prev?.type === "text.delta" && prev.agentComputer === name && prev.turn === ev.turn) {
       const merged = { ...prev, data: { text: prev.data.text + ev.data.text }, _count: (prev._count ?? 1) + 1 } as ConsoleEvent;
       events[events.length - 1] = merged;
     } else {
