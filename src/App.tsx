@@ -199,9 +199,8 @@ function FleetApp({ info, fleets, seg }: { info: FleetInfo; fleets: FleetsRespon
               Controller {healthy === false ? "down" : healthy ? "ok" : "…"}
             </Pill>
             {snap.version !== null && (
-              <Pill tone="muted" title={snap.driftCount ? `${snap.driftCount} changes since the last a12s up` : "the Fleet's version"}>
+              <Pill tone="muted" title="the Fleet's version">
                 <span className="mono">v{snap.version}</span>
-                {snap.driftCount > 0 && <span className="warn-t">· {snap.driftCount} drift</span>}
               </Pill>
             )}
             <Pill tone={snap.live ? "info" : "warn"} title="the one fleet-wide event connection">
