@@ -113,6 +113,12 @@ export function Detail({ name, tab, turn }: { name: string; tab: string; turn?: 
               <span className="err-t">{c.error.reason}</span>
             </>
           )}
+          {c.waiting && (
+            <>
+              <span className="sep">·</span>
+              <span className="warn-t">waiting for {c.waiting.credentials.join(", ")}: {c.waiting.fix}</span>
+            </>
+          )}
         </div>
         <div className="tabs" role="tablist">
           {tabs.map((t, i) => (
